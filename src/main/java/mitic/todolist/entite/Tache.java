@@ -1,4 +1,4 @@
-package entite;
+package mitic.todolist.entite;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
