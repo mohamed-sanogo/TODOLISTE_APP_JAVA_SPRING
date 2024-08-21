@@ -17,12 +17,21 @@ public class TacheService {
     }
 
     public Tache createTache(Tache tache) {
-        Optional<Tache> verifyTache = tacheRepository.findByTitle(tache.getTitle());
-        if (verifyTache.isPresent()) {
-            throw new IllegalArgumentException("Une tâche avec ce titre existe déjà.");
+        if (tache.getId() == null) {
+            Optional<Tache> verifyTache = tacheRepository.findByTitle(tache.getTitle());
+            if (verifyTache.isPresent()) {
+                throw new IllegalArgumentException("Une tâche avec ce titre existe déjà.");
+            }
+        } else {
+            Optional<Tache> verifyTache = tacheRepository.findByTitle(tache.getTitle());
+            if (verifyTache.isPresent() && !verifyTache.get().getId().equals(tache.getId())) {
+                throw new IllegalArgumentException("Une autre tâche avec ce titre existe déjà.");
+            }
         }
+
         return tacheRepository.save(tache);
     }
+
     public Optional<Tache> findById(int id) {
         return tacheRepository.findById(id);
     }
@@ -30,9 +39,6 @@ public class TacheService {
         return tacheRepository.findAll();
     }
 
-    public List<Tache> getTachesByStatus(boolean status) {
-        return tacheRepository.findByCompleted(status);
-    }
     public void deleteById(int id) {
         tacheRepository.deleteById(id);
     }

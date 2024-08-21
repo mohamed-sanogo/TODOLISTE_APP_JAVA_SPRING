@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/tache")
@@ -41,10 +42,9 @@ public class TacheController {
         return ResponseEntity.ok(taches);
     }
 
-    @GetMapping("/status")
-    public ResponseEntity<List<Tache>> getTachesByStatus(@RequestParam boolean completed) {
-        List<Tache> taches = tacheService.getTachesByStatus(completed);
-        return ResponseEntity.ok(taches);
+    @GetMapping("{id}")
+    public Optional<Tache> findById(@PathVariable int id) {
+        return tacheService.findById(id);
     }
 
     @PutMapping("/{id}")
