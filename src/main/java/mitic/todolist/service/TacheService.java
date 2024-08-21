@@ -16,7 +16,11 @@ public class TacheService {
         this.tacheRepository = tacheRepository;
     }
 
-    public Tache createTache(Tache tache){
+    public Tache createTache(Tache tache) {
+        Optional<Tache> verifyTache = tacheRepository.findByTitle(tache.getTitle());
+        if (verifyTache.isPresent()) {
+            throw new IllegalArgumentException("Une tâche avec ce titre existe déjà.");
+        }
         return tacheRepository.save(tache);
     }
     public Optional<Tache> findById(int id) {
@@ -24,6 +28,10 @@ public class TacheService {
     }
     public List<Tache> getTache(){
         return tacheRepository.findAll();
+    }
+
+    public List<Tache> getTachesByStatus(boolean status) {
+        return tacheRepository.findByCompleted(status);
     }
     public void deleteById(int id) {
         tacheRepository.deleteById(id);

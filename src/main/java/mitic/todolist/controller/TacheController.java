@@ -20,21 +20,30 @@ public class TacheController {
         this.tacheService = tacheService;
     }
 
+    @PostMapping
     public ResponseEntity<Tache> saveTache(@RequestBody Tache tache) {
         try {
-            if (tache.getTitle() == null) {
+            if (tache.getTitle() == null || tache.getTitle().trim().isEmpty()) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
             }
             Tache savedTache = tacheService.createTache(tache);
             return ResponseEntity.status(HttpStatus.CREATED).body(savedTache);
+        } catch (IllegalArgumentException e) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
         } catch (Exception e) {
-            e.printStackTrace();
+            e.getCause();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
         }
     }
     @GetMapping
     public ResponseEntity<List<Tache>> getTaches() {
         List<Tache> taches = tacheService.getTache();
+        return ResponseEntity.ok(taches);
+    }
+
+    @GetMapping("/status")
+    public ResponseEntity<List<Tache>> getTachesByStatus(@RequestParam boolean completed) {
+        List<Tache> taches = tacheService.getTachesByStatus(completed);
         return ResponseEntity.ok(taches);
     }
 
